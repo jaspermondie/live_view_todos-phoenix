@@ -1,13 +1,24 @@
-<form action="#" phx-submit="add">
-    <%= text_input :todo, :title, placeholder: "What do you want to get done?" %>
-    <%= submit "Add", phx_disable_with: "Adding..." %>
-</form>
+<form action="#" phx-submit="add"> 
+<%= text_input :todo, :title, placeholder: "What do you want to get done?" %> 
+<%= submit "Add", phx_disable_with: "Adding..." %> </form>
 
 <%= for todo <- @todos do %>
 <div>
     <%= checkbox(:todo, :done, phx_click: "toggle_done", phx_value: todo.id, value: todo.done) %>
-    <%= todo.title %>
-    |
-    <%= link("delete", to: "#", phx_click: "delete_todo", phx_value: todo.id) %>
+    <%= if @edit_id == todo.id do %>
+        <form action="#" phx-submit="update" > 
+            <%= hidden_input(:todo, :id, value: todo.id) %>
+            <%= text_input(:todo, :title, value: todo.title) %>
+            <%= submit "Update", phx_disable_with: "Updating.." %> 
+            <%= link("cancel", to: "#", phx_click: "cancel_edit") %>
+        </form>
+    <%= else %>
+        <%= todo.title %>
+        |
+        <%= link("edit", to: "#", phx_click: "edit_todo", phx_value: todo.id) %>
+        |
+        <%= link("delete", to: "#", phx_click: "delete_todo", phx_value: todo.id) %>
+    <% end %>
+    
 </div>
 <% end %>
